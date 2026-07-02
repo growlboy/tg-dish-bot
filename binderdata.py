@@ -4,6 +4,7 @@ import asyncpg
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
+from aiogram.utils.chat_action import ChatActionSender
 
 from apirouter import datarequest
 
@@ -45,7 +46,9 @@ async def start_handler(message: types.Message):
 async def prompt_handler(message: types.Message):
     user_prompt = message.text
 
-    answer = await datarequest(user_prompt)
+    # Отображение статуса "Печатает..." на запросе
+    async with ChatActionSender.typing(chat_id=message.chat.id, bot=bot):
+        answer = await datarequest(user_prompt)
 
     await message.answer(answer)
 

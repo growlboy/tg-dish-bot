@@ -24,7 +24,7 @@ async def datarequest(dish):
     }
 
     async with aiohttp.ClientSession() as session:
-        async with session.port(url, headers=headers, json=data) as response:
+        async with session.post(url, headers=headers, json=data) as response:
             if response.status == 200:
                 response_data = await response.json()
                 text_message = response_data['choices'][0]['message']['content']

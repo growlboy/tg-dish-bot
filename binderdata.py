@@ -28,15 +28,6 @@ async def onbot_startup():
 async def onbot_end():
     None
 
-
-@dp.message(F.text)
-async def prompt_handler(message: types.Message):
-    user_prompt = message.text
-
-    answer = await datarequest(user_prompt)
-
-    await message.answer(answer)
-
 @dp.message(Command("start"))
 async def start_handler(message: types.Message):
     tg_id = message.from_user.id
@@ -49,6 +40,14 @@ async def start_handler(message: types.Message):
     except Exception as error:
         await message.answer("Так.. прости пока не могу ответить")
         print(error)
+
+@dp.message(F.text)
+async def prompt_handler(message: types.Message):
+    user_prompt = message.text
+
+    answer = await datarequest(user_prompt)
+
+    await message.answer(answer)
 
 async def main():
     dp.startup.register(onbot_startup)

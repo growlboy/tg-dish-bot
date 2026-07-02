@@ -50,7 +50,7 @@ async def prompt_handler(message: types.Message):
     async with ChatActionSender.typing(chat_id=message.chat.id, bot=bot):
         answer = await datarequest(user_prompt)
 
-    await message.answer(answer)
+        await message.answer(answer)
 
 async def main():
     dp.startup.register(onbot_startup)

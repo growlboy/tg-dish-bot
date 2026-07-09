@@ -58,7 +58,7 @@ async def start_handler(message: types.Message, state: FSMContext):
             await db.AddUser(tg_id, username)
 
         if await db.IsHaveRealname(tg_id) == False:
-            await state.get_state(OnRegistration.name_waiting)
+            await state.set_state(OnRegistration.name_waiting)
             await message.answer(f"Привет, {username}. Мне нравится это имя, но скажи, как я могу тебя называть по-настоящему?")
         else:
             await message.answer(f"Снова привет. Ты меня перезапустил(а) и я готов считать твой рацион!")

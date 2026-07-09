@@ -64,7 +64,7 @@ async def start_handler(message: types.Message, state: FSMContext):
             await message.answer(f"Снова привет. Ты меня перезапустил(а) и я готов считать твой рацион!")
 
     except Exception as error:
-        await message.answer("Error")
+        await message.answer(error)
 
 
 @dp.message(OnRegistration.name_waiting, F.text)
@@ -87,7 +87,7 @@ async def prompt_handler(message: types.Message, state: FSMContext):
             await message.answer(message.text)
 
     except Exception as error:
-        await message.answer("Error")
+        await message.answer(error)
 
 async def main():
     dp.startup.register(onbot_startup)

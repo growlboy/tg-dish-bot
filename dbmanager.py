@@ -110,9 +110,6 @@ class DataBaseManager:
     
     async def GetDailyAllow(self, tg_id):
         return await self.__get_daily_allow(tg_id)
-    
-    async def NewUser(self, tg_id, username):
-        await self.__add_user(tg_id, username)
 
     async def SetRealname(self, tg_id, realname):
         await self.__set_realname(tg_id, realname)
@@ -141,5 +138,3 @@ async def data_set():
     )
     db = DataBaseManager(pool)
     print(await db.IsHaveRealname(12345678))
-
-asyncio.run(data_set())

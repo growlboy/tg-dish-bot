@@ -55,7 +55,7 @@ async def start_handler(message: types.Message, state: FSMContext):
         tg_id = message.from_user.id
 
         if await db.CheckRegister(tg_id) == False:
-            db.AddUser(tg_id, username)
+            await db.AddUser(tg_id, username)
 
         if await db.IsHaveRealname(tg_id) == False:
             await state.get_state(OnRegistration.name_waiting)

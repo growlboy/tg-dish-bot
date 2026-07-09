@@ -1,0 +1,143 @@
+import asyncio
+import asyncpg
+import aiosql
+import datetime
+
+queries = aiosql.from_path("queries.sql", "asyncpg", mandatory_parameters=False)
+
+class DataBaseManager:
+    def __init__(self, pool):
+        self.pool = pool
+
+    async def __get_daily_allow(self, tg_id):
+        try:
+            async with self.pool.acquire() as conn:
+                get_daily_allow = await queries.get_daily_allow(conn, tg_id=tg_id)
+                return get_daily_allow
+        except Exception as error:
+            return "Error with getting"
+
+    async def __get_today_cal(self, tg_id):
+        try:
+            async with self.pool.acquire() as conn:
+                today_cal = await queries.get_today_cal(conn, tg_id=tg_id)
+                return today_cal
+        except Exception as error:
+            return "Error with getting"
+
+    async def __set_daily_allow(self, tg_id, daily_cal):
+        try:
+            async with self.pool.acquire() as conn:
+                await queries.set_daily_allow(conn, tg_id=tg_id, daily_cal=daily_cal)
+        except Exception as error:
+            print(error)
+
+    async def __plus_today_cal(self, tg_id, plus_cal):
+        try:
+            await self.__check_today_date(tg_id)
+
+            async with self.pool.acquire() as conn:
+                await queries.plus_cal(conn, tg_id=tg_id, plus_cal = plus_cal)
+        except Exception as error:
+            print(error)
+
+    async def __set_today_cal(self, tg_id, new_cal):
+        try:
+            async with self.pool.acquire() as conn:
+                await queries.add_user(conn, tg_id=tg_id, today_cal = new_cal)
+        except Exception as error:
+            print(error)
+        
+    async def AddUser(self, tg_id, username):
+        try:
+            async with self.pool.acquire() as conn:
+                await queries.add_user(conn, tg_id=tg_id, username=username)
+        except Exception as error:
+            print(error)
+
+    async def __delete_user(self, tg_id):
+        try:
+            async with self.pool.acquire() as conn:
+                await queries.delete_user(conn, tg_id=tg_id)
+        except Exception as error:
+            print(error)
+
+    async def __set_realname(self, tg_id, name):
+        try:
+            async with self.pool.acquire() as conn:
+                await queries.set_realname(conn, tg_id=tg_id, new_name=name)
+        except Exception as error:
+            print(error)
+     
+    async def __get_realname(self, tg_id):
+        try:
+            async with self.pool.acquire() as conn:
+                realname = await queries.get_realname(conn, tg_id=tg_id)
+                return realname
+        except Exception as error:
+            print(error)
+
+    async def __check_today_date(self, tg_id):
+        try:
+            async with self.pool.acquire() as conn:
+                last_date: datetime.date = await queries.get_user_date(conn, tg_id = tg_id)
+                today_date: datetime.date = await queries.get_current_date(conn)
+
+                if last_date != today_date:
+                    self.set_today_cal(tg_id, 0)
+
+                await queries.set_date(conn, tg_id=tg_id)
+        except Exception as error:
+            print(error)
+
+    async def __is_register(self, tg_id):
+        try:
+            async with self.pool.acquire() as conn:
+                return await queries.isregister(conn, tg_id=tg_id)
+        except Exception as error:
+            print(error)
+
+
+    async def PlusTodayCal(self, tg_id, plus_cal):
+        await self.__plus_today_cal(tg_id, plus_cal)
+        return await self.__get_today_cal(tg_id)
+    
+    async def GetTodayCal(self, tg_id):
+        return await self.__get_today_cal(tg_id)
+    
+    async def SetNewDailyAllow(self, tg_id, daily_allow):
+        await self.__set_daily_allow(tg_id, daily_allow)
+        return await self.__get_daily_allow(tg_id)
+    
+    async def GetDailyAllow(self, tg_id):
+        return await self.__get_daily_allow(tg_id)
+    
+    async def NewUser(self, tg_id, username):
+        await self.__add_user(tg_id, username)
+
+    async def SetRealname(self, tg_id, realname):
+        await self.__set_realname(tg_id, realname)
+        return await self.__get_realname(tg_id)
+    
+    async def GetRealname(self, tg_id):
+        return await self.__get_realname(tg_id)
+    
+    async def CheckRegister(self, tg_id):
+        return await self.__is_register(tg_id)
+    
+    async def IsHaveRealname(self, tg_id):
+        if self.GetRealname(tg_id) == 'None':
+            return False
+        else:
+            return True
+
+
+
+async def data_set():
+    pool = await asyncpg.create_pool(
+        user='postgres',
+        password='kvet',
+        database='postgres',
+        host='167.17.182.93'
+    )
+    db = DataBaseManager(pool)

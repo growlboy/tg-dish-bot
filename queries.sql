@@ -43,17 +43,17 @@ SELECT today_cal
 FROM users_maindata
 WHERE tg_id = :tg_id
 
--- name get_daily_allow$
+-- name: get_daily_allow$
 SELECT daily_allow
 FROM users_maindata
 WHERE tg_id = :tg_id
 
--- name get_realname$
+-- name: get_realname$
 SELECT realname
 FROM users_maindata
 WHERE tg_id = :tg_id
 
--- name isregister$
+-- name: isregister$
 SELECT EXISTS (
     SELECT 1
     FROM users_maindata

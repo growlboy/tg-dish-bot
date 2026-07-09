@@ -140,3 +140,6 @@ async def data_set():
         host='167.17.182.93'
     )
     db = DataBaseManager(pool)
+    print(await db.IsHaveRealname(12345678))
+
+asyncio.run(data_set())

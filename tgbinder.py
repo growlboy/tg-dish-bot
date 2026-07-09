@@ -83,8 +83,10 @@ async def prompt_handler(message: types.Message, state: FSMContext):
     try:
         username = message.from_user.username
         tg_id = message.from_user.id
-        if await db.CheckRegister(tg_id) and db.IsHaveRealname(tg_id):
-            await message.answer(message.text)
+        mess = message.text
+
+        if await db.CheckRegister(tg_id) and await db.IsHaveRealname(tg_id):
+            await message.answer(mess)
 
     except Exception as error:
         await message.answer(error)

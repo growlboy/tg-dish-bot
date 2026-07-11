@@ -35,7 +35,7 @@ async def OnPlusCallories(message, tg_id):
             today_cal = await db.PlusTodayCal(tg_id, new_cal)
 
             if today_cal:
-                return today_cal
+                return str(today_cal)
             else:
                 print("Неполадка в PlusTodayCal")
         else:

@@ -35,7 +35,7 @@ async def OnPlusCallories(message, tg_id):
             today_cal = await db.PlusTodayCal(tg_id, new_cal)
 
             if today_cal:
-                return str(today_cal)
+                return str(new_cal), str(today_cal)
             else:
                 print("Неполадка в PlusTodayCal")
         else:
@@ -76,9 +76,8 @@ async def start_handler(message: types.Message, state: FSMContext):
     except Exception as error:
         print(error)
 
-
 @dp.message(OnRegistration.name_waiting, F.text)
-async def prompt_handler(message: types.Message, state: FSMContext):
+async def registr_waiting(message: types.Message, state: FSMContext):
     user_name = message.text
     tg_id = message.from_user.id
     
@@ -89,7 +88,7 @@ async def prompt_handler(message: types.Message, state: FSMContext):
     await message.answer(f"Приятно познакомиться, {user_name}! Начнем считать твой рацион. Пиши, что ты съел(а) за день, а я подсчитаю суточные каллории.")
 
 @dp.message(F.text)
-async def prompt_handler(message: types.Message, state: FSMContext):
+async def prompt_reading(message: types.Message, state: FSMContext):
     try:
         username = message.from_user.username
         tg_id = message.from_user.id
@@ -98,11 +97,20 @@ async def prompt_handler(message: types.Message, state: FSMContext):
         if await db.CheckRegister(tg_id) and await db.IsHaveRealname(tg_id):
             answer = await OnPlusCallories(prompt, tg_id)
 
-            if answer:
-                await message.answer(answer)
+            if answer[0] and answer[1]:
+                await message.answer(f"""Это вышло на {answer[0]} каллорий.\n
+                                        Всего на сегодня: {answer[1]} каллорий ✅""")
 
     except Exception as error:
         print(error)
+
+@dp.message(Command("todaycheck"))
+async def cmd_todaycheck(message: Message):
+    tg_id = message.from_user.id
+    answer = await db.GetTodayCal(tg_id)
+
+    if answer:
+        await message.answer(f"""Всего на сегодня: {str(answer)} каллорий ✅""")
 
 async def main():
     dp.startup.register(onbot_startup)

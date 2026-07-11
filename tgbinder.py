@@ -94,7 +94,7 @@ async def prompt_reading(message: types.Message, state: FSMContext):
         tg_id = message.from_user.id
         prompt = message.text
 
-        if await db.CheckRegister(tg_id) and await db.IsHaveRealname(tg_id):
+        if prompt[0] != '/' and await db.CheckRegister(tg_id) and await db.IsHaveRealname(tg_id):
             answer = await OnPlusCallories(prompt, tg_id)
 
             if answer[0] and answer[1]:
@@ -108,6 +108,8 @@ async def prompt_reading(message: types.Message, state: FSMContext):
 async def cmd_todaycheck(message: Message):
     tg_id = message.from_user.id
     answer = await db.GetTodayCal(tg_id)
+
+    print(answer)
 
     if answer:
         await message.answer(f"""Всего на сегодня: {str(answer)} каллорий ✅""")

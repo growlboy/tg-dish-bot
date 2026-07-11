@@ -13,8 +13,7 @@ async def datarequest(prompt):
     URL = os.getenv("OPEN_ROUTER_API")
     
     headers = {
-        "Authorization": f"Bearer {API_KEY}",
-        "Content-Type": "application/json"
+        "Authorization": API_KEY,
     }
     
     payload = {

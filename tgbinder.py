@@ -76,6 +76,17 @@ async def start_handler(message: types.Message, state: FSMContext):
     except Exception as error:
         print(error)
 
+@dp.message(Command("todaycheck"))
+async def cmd_todaycheck(message: types.Message, state: FSMContext):
+    print("Ты отвечаешь")
+    tg_id = message.from_user.id
+    answer = await db.GetTodayCal(tg_id)
+
+    print(answer)
+
+    if answer:
+        await message.answer(f"""Всего на сегодня: {str(answer)} каллорий ✅""")
+
 @dp.message(OnRegistration.name_waiting, F.text)
 async def registr_waiting(message: types.Message, state: FSMContext):
     user_name = message.text
@@ -103,17 +114,6 @@ async def prompt_reading(message: types.Message, state: FSMContext):
 
     except Exception as error:
         print(error)
-
-@dp.message(Command("todaycheck"))
-async def cmd_todaycheck(message: types.Message, state: FSMContext):
-    print("Ты отвечаешь")
-    tg_id = message.from_user.id
-    answer = await db.GetTodayCal(tg_id)
-
-    print(answer)
-
-    if answer:
-        await message.answer(f"""Всего на сегодня: {str(answer)} каллорий ✅""")
 
 async def main():
     dp.startup.register(onbot_startup)

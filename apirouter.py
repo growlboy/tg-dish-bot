@@ -26,6 +26,7 @@ async def datarequest(prompt):
 
     async with aiohttp.ClientSession() as session:
         async with session.post(URL, headers=headers, json=payload) as response:
+            print(response.status)
             if response.status == 200:
                 response_data = await response.json()
                 text_message = response_data['choices'][0]['message']['content']

@@ -105,7 +105,8 @@ async def prompt_reading(message: types.Message, state: FSMContext):
         print(error)
 
 @dp.message(Command("todaycheck"))
-async def cmd_todaycheck(message: Message):
+async def cmd_todaycheck(message: types.Message, state: FSMContext):
+    print("Ты отвечаешь")
     tg_id = message.from_user.id
     answer = await db.GetTodayCal(tg_id)
 

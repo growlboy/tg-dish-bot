@@ -83,7 +83,7 @@ class DataBaseManager:
                 today_date: datetime.date = await self.queries.get_current_date(conn)
 
                 if last_date != today_date:
-                    self.__set_today_cal(tg_id, 0)
+                    await self.__set_today_cal(tg_id, 0)
 
                 await self.queries.set_date(conn, tg_id=tg_id)
         except Exception as error:

@@ -2,33 +2,34 @@ import os
 import aiohttp
 import json 
 
-PROMPT = """(Пиши на русском, пожалуйста. Я пишу блюдо, ты списком разделяешь его на состовляющие магазинные продукты. 
-            Пиши только продукты через перенос на новую строку.
-            Если такого блюда не существует или оно слишком сумбурное для реальности пиши "Извините, но это врятли похоже на блюдо, возможно вы имели...(максимально похожее блюдо по названию)")"""
+PROMPT = """Проанализируй предложенную строку и выдай в ответе только ОДНО число без ислючений - примерное количество калорий
+            в продуктах написанных в строке."""
 
-async def datarequest(dish):
-    fullprompt = PROMPT + dish
+async def datarequest(prompt):
+    data = f"""Проанализируй предложенную строку{prompt} и выдай в ответе только ОДНО число без ислючений - примерное количество калорий
+            в продуктах написанных в строке."""
 
-    url=os.getenv("OPEN_ROUTER_API")
-    headers={
-        "Authorization": os.getenv("AUTH_TOKEN")
+    API_KEY = os.getenv("AUTH_TOKEN")
+    URL = os.getenv("OPEN_ROUTER_API")
+    
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
     }
-    data={
+    
+    payload = {
         "model": os.getenv("MODEL"),
-        "messages":[
-            {
-            "role": "user",
-            "content": fullprompt
-            }
+        "messages": [
+            {"role": "user", "content": data}
         ]
     }
 
     async with aiohttp.ClientSession() as session:
-        async with session.post(url, headers=headers, json=data) as response:
+        async with session.post(URL, headers=headers, json=payload) as response:
             if response.status == 200:
                 response_data = await response.json()
                 text_message = response_data['choices'][0]['message']['content']
-
+                
                 return text_message
             else:
-                return "Прости.. Пока службы не работают"
+                return "None"

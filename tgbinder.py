@@ -16,13 +16,6 @@ import dbmanager
 load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-DB_CONFIG = {
-    "database": os.getenv("DB_NAME"),
-    "user": os.getenv("DB_USER"),
-    "password": os.getenv("DB_PASSWORD"),
-    "host": os.getenv("DB_HOST"),
-    "port": os.getenv("DB_PORT", "5432")    
-}
 
 class OnRegistration(StatesGroup):
     name_waiting = State()
@@ -33,13 +26,30 @@ dp_pool = None
 pool = None
 db = None
 
+async def OnPlusCallories(message, tg_id):
+    answer = await datarequest(message)
+
+    if answer != "None":
+        if answer.isdigit():
+            new_cal = int(answer)
+            today_cal = await db.PlusTodayCal(tg_id, new_cal)
+
+            if today_cal:
+                return today_cal
+            else:
+                print("Неполадка в PlusTodayCal")
+        else:
+            print("Выдал не чисто число")
+    else:
+        print("Неполадка в apirouter")
+
 async def onbot_startup():
     global pool 
     pool = await asyncpg.create_pool(
-        user='postgres',
-        password='kvet',
-        database='postgres',
-        host='167.17.182.93'
+        user=os.getenv("DB_USER"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME"),
+        host=os.getenv("DB_HOST"),
     )
 
     global db
@@ -83,10 +93,13 @@ async def prompt_handler(message: types.Message, state: FSMContext):
     try:
         username = message.from_user.username
         tg_id = message.from_user.id
-        mess = message.text
+        prompt = message.text
 
         if await db.CheckRegister(tg_id) and await db.IsHaveRealname(tg_id):
-            await message.answer(mess)
+            answer = await OnPlusCallories(prompt, tg_id)
+
+            if answer:
+                await message.answer(answer)
 
     except Exception as error:
         print(error)

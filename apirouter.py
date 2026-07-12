@@ -5,14 +5,16 @@ import json
 PROMPT = """Проанализируй предложенную строку и выдай в ответе только ОДНО число без ислючений - примерное количество калорий
             в продуктах написанных в строке."""
 
-API_KEY = os.getenv("AUTH_TOKEN")
-URL = os.getenv("OPEN_ROUTER_API")
-    
-headers = {
-    "Authorization": API_KEY,
-}
-
 async def datarequest(prompt):
+    API_KEY = os.getenv("AUTH_TOKEN")
+    URL = os.getenv("OPEN_ROUTER_API")
+
+    print(URL)
+    
+    headers = {
+    "Authorization": API_KEY,
+    }
+
     data = f"""Проанализируй предложенную строку {prompt} и выдай в ответе только ОДНО число без ислючений - примерное количество калорий
             в продуктах написанных в строке."""
 
@@ -36,6 +38,13 @@ async def datarequest(prompt):
             
 
 async def dayallowrequest(prompt):
+    API_KEY = os.getenv("AUTH_TOKEN")
+    URL = os.getenv("OPEN_ROUTER_API")
+    
+    headers = {
+    "Authorization": API_KEY,
+    }
+
     print("Считаю")
     data = f"""Проанализируй предложенную строку {prompt} и по параметрам выдай в ответе только ОДНО число без ислючений - примерную норму
                 каллорий для человека для поддержания стройной фигуры"""

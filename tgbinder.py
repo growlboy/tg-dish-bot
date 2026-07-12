@@ -171,11 +171,12 @@ async def allow_waiting(message: types.Message, state: FSMContext):
     id = message.from_user.id
 
     user_data = await state.get_data()
-    all_data_prompt = f"{user_data.get("user_gender")} {user_data.get("user_weight") } {user_data.get("user_height")}"
+    gender = user_data.get("user_gender")
+    weight = user_data.get("user_weight") 
+    height = {user_data.get("user_height")}
+    all_data_prompt = f"Gender: {gender}, Weight: {weight}kg, Height: {height}cm"
 
     allow_cal = await dayallowrequest(all_data_prompt)
-
-    print("Здесь")
 
     if allow_cal.isdigit():
         # Удаление логированных сообщений

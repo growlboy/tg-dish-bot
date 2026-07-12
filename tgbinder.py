@@ -112,9 +112,6 @@ async def registr_waiting(message: types.Message, state: FSMContext):
     await state.set_state(OnSetDailyAllow.gender_waiting)
     await message.answer(f"Приятно познакомиться, {user_name}! Ответь на пару легких вопросов")
     await log_message_id(state, message.message_id)
-
-@dp.message(OnSetDailyAllow.gender_waiting, F.text)
-async def allow_waiting(message: types.Message, state: FSMContext):
     await message.answer(
         "Укажите ваш пол.",
         reply_markup=get_inline_gender_answer()
@@ -128,7 +125,7 @@ async def process_callback_man(callback_query: types.CallbackQuery, state: FSMCo
     await state.update_data(user_gender="Man")
     
     await callback_query.message.edit_text(
-        text="Отлично!"
+        text="Отлично! Какой твой вес? Напиши числом"
     )
 
     await state.set_state(OnSetDailyAllow.weight_waiting)
@@ -140,7 +137,7 @@ async def process_callback_man(callback_query: types.CallbackQuery, state: FSMCo
     await state.update_data(user_gender="Girl")
     
     await callback_query.message.edit_text(
-        text="Отлично!"
+        text="Отлично! Какой твой вес? Напиши числом"
     )
 
     await state.set_state(OnSetDailyAllow.weight_waiting)
@@ -149,21 +146,19 @@ async def process_callback_man(callback_query: types.CallbackQuery, state: FSMCo
 async def weight_waiting(message: types.Message, state: FSMContext):
     await log_message_id(state, message.message_id)
 
-    await message.answer("Напиши свой вес числом.")
-    await log_message_id(state, message.message_id)
     user_weight = message.text
 
     if user_weight.isdigit():
         await state.update_data(user_weight=user_weight)
         await state.set_state(OnSetDailyAllow.height_waiting)
+        await message.answer("Последний шаг. Напиши свой рост числом")
     else:
         await message.delete()
 
 @dp.message(OnSetDailyAllow.height_waiting, F.text)
 async def height_waiting(message: types.Message, state: FSMContext):
     await log_message_id(state, message.message_id)
-    await message.answer("Напиши свой рост числом.")
-    await log_message_id(state, message.message_id)
+    
     user_height = message.text
 
     if user_height.isdigit():

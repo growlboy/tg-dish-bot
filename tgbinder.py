@@ -118,7 +118,7 @@ async def registr_waiting(message: types.Message, state: FSMContext):
     await log_message_id(state, message.message_id)
 
 @dp.callback_query(lambda c: c.data == "btn_man")
-async def process_callback_man(callback_query: types.CallbackQuery, state: FSMContext):
+async def process_callback_man(callback_query: types.CallbackQuery, state: FSMContext, message: types.Message):
     await callback_query.answer()
     
     await state.update_data(user_gender="Man")
@@ -126,11 +126,12 @@ async def process_callback_man(callback_query: types.CallbackQuery, state: FSMCo
     await callback_query.message.edit_text(
         text="Отлично! Какой твой вес? Напиши числом"
     )
+    await log_message_id(state, message.message_id)
 
     await state.set_state(OnSetDailyAllow.weight_waiting)
 
 @dp.callback_query(lambda c: c.data == "btn_girl")
-async def process_callback_man(callback_query: types.CallbackQuery, state: FSMContext):
+async def process_callback_man(callback_query: types.CallbackQuery, state: FSMContext, message: types.Message):
     await callback_query.answer()
     
     await state.update_data(user_gender="Girl")
@@ -138,6 +139,7 @@ async def process_callback_man(callback_query: types.CallbackQuery, state: FSMCo
     await callback_query.message.edit_text(
         text="Отлично! Какой твой вес? Напиши числом"
     )
+    await log_message_id(state, message.message_id)
 
     await state.set_state(OnSetDailyAllow.weight_waiting)
 
@@ -151,6 +153,7 @@ async def weight_waiting(message: types.Message, state: FSMContext):
         await state.update_data(user_weight=user_weight)
         await state.set_state(OnSetDailyAllow.height_waiting)
         await message.answer("Последний шаг. Напиши свой рост числом")
+        await log_message_id(state, message.message_id)
     else:
         await message.delete()
 
@@ -163,6 +166,7 @@ async def height_waiting(message: types.Message, state: FSMContext):
     if user_height.isdigit():
         await state.update_data(user_height=user_height)
         await message.answer("Считаю...")
+        await log_message_id(state, message.message_id)
         await allow_waiting(message, state)
     else:
         await message.delete()
@@ -191,7 +195,7 @@ async def allow_waiting(message: types.Message, state: FSMContext):
             print(f"Ошибка при массовом удалении: {error}")
         #-------------------------------
 
-        allow = await db.SetNewDailyAllow(id, allow_cal)
+        allow = await db.SetNewDailyAllow(id, int(allow_cal))
         await state.clear()
         await message.answer(f"""Отлично! Твоя дневная норма: {allow} каллорий🥕
                              Начнем считать твой рацион. Напиши что ты съел(а) за сегодня.""")

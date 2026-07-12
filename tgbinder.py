@@ -164,6 +164,7 @@ async def height_waiting(message: types.Message, state: FSMContext):
     if user_height.isdigit():
         await state.update_data(user_height=user_height)
         await state.set_state(OnSetDailyAllow.allow_awaiting)
+        await message.answer("Считаю...")
     else:
         await message.delete()
 
@@ -175,6 +176,8 @@ async def allow_waiting(message: types.Message, state: FSMContext):
     all_data_prompt = f"{user_data.get("user_gender")} {user_data.get("user_weight") } {user_data.get("user_height")}"
 
     allow_cal = await dayallowrequest(all_data_prompt)
+
+    print("Здесь")
 
     if allow_cal.isdigit():
         # Удаление логированных сообщений

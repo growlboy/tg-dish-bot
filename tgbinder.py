@@ -118,7 +118,7 @@ async def registr_waiting(message: types.Message, state: FSMContext):
     await log_message_id(state, message.message_id)
 
 @dp.callback_query(lambda c: c.data == "btn_man")
-async def process_callback_man(callback_query: types.CallbackQuery, state: FSMContext, message: types.Message):
+async def process_callback_man(callback_query: types.CallbackQuery, state: FSMContext):
     await callback_query.answer()
     
     await state.update_data(user_gender="Man")
@@ -126,12 +126,12 @@ async def process_callback_man(callback_query: types.CallbackQuery, state: FSMCo
     await callback_query.message.edit_text(
         text="Отлично! Какой твой вес? Напиши числом"
     )
-    await log_message_id(state, message.message_id)
+    await log_message_id(state, callback_query.message.message_id)
 
     await state.set_state(OnSetDailyAllow.weight_waiting)
 
 @dp.callback_query(lambda c: c.data == "btn_girl")
-async def process_callback_man(callback_query: types.CallbackQuery, state: FSMContext, message: types.Message):
+async def process_callback_man(callback_query: types.CallbackQuery, state: FSMContext):
     await callback_query.answer()
     
     await state.update_data(user_gender="Girl")
@@ -139,7 +139,7 @@ async def process_callback_man(callback_query: types.CallbackQuery, state: FSMCo
     await callback_query.message.edit_text(
         text="Отлично! Какой твой вес? Напиши числом"
     )
-    await log_message_id(state, message.message_id)
+    await log_message_id(state, callback_query.message.message_id)
 
     await state.set_state(OnSetDailyAllow.weight_waiting)
 

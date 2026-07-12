@@ -25,7 +25,6 @@ class OnSetDailyAllow(StatesGroup):
     gender_waiting = State()
     weight_waiting = State()
     height_waiting = State()
-    allow_waiting = State()
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
@@ -163,14 +162,12 @@ async def height_waiting(message: types.Message, state: FSMContext):
 
     if user_height.isdigit():
         await state.update_data(user_height=user_height)
-        await state.set_state(OnSetDailyAllow.allow_waiting)
         await message.answer("Считаю...")
+        await allow_waiting(message, state)
     else:
         await message.delete()
 
-@dp.message(OnSetDailyAllow.allow_waiting, F.text)
 async def allow_waiting(message: types.Message, state: FSMContext):
-    print("Здесь")
     id = message.from_user.id
 
     user_data = await state.get_data()

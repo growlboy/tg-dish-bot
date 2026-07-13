@@ -26,7 +26,7 @@ async def request(payload):
         return None, 400
 
 class AiRouterConnect:
-    async def count_callories_request(prompt):
+    async def count_callories_request(self, prompt):
         data = f"""Проанализируй предложенную строку {prompt} и выдай в ответе только ОДНО число без ислючений - примерное количество калорий
         в продуктах написанных в строке."""
 
@@ -40,7 +40,7 @@ class AiRouterConnect:
         return request(payload)
                 
 
-    async def day_allow_request(prompt):
+    async def day_allow_request(self, prompt):
         try:
             data = f"""Проанализируй предложенную строку {prompt} и по параметрам выдай в ответе только ОДНО число без ислючений - примерную норму
             каллорий для человека для поддержания стройной фигуры"""

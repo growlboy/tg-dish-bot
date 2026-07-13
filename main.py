@@ -3,9 +3,8 @@ import asyncpg
 import logging
 from aiogram import Bot, Dispatcher
 
-from config import config
-from handlers import handlers_router
 from config import *
+from handlers import handlers_router
 import database.dbmanager as dbmanager
 import ai_service.airouter as airouter
 
@@ -38,9 +37,6 @@ async def main():
         await pool.close()
         await bot.session.close()
         logging.info("Connections are closed.")
-
-
-
 
 if __name__ == "__main__":
     try:

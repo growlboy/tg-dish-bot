@@ -77,7 +77,7 @@ async def weight_waiting(message: types.Message, state: FSMContext):
         await message.delete()
 
 @router.message(OnSetDailyAllow.height_waiting, F.text)
-async def height_waiting(message: types.Message, state: FSMContext):
+async def height_waiting(message: types.Message, state: FSMContext, db, bot, ai):
     await log_message_id(state, message.message_id)
     
     user_height = message.text
@@ -86,7 +86,7 @@ async def height_waiting(message: types.Message, state: FSMContext):
         await state.update_data(user_height=user_height)
         await message.answer("Считаю...")
         await log_message_id(state, message.message_id)
-        await allow_waiting(message, state)
+        await allow_waiting(message, state, db, bot, ai)
     else:
         await message.delete()
 

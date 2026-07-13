@@ -16,7 +16,6 @@ async def PlusCallories(prompt, tg_id, db, ai):
                 logger.info(f"Database error.")
         else:
             logger.info(f"AI give not digit. Trying again.")
-            return PlusCallories(prompt, tg_id, db, ai)
     else:
         logger.info(f"Error: {answer[1]}.")
 

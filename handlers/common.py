@@ -24,6 +24,7 @@ async def prompt_reading(message: types.Message, db, ai):
         else:
             await message.answer("Вы еще не зарегистрированы...")
 
-    except:
+    except Exception as error:
+        print(error)
         logger.info("Get error in buisness request")
         await message.answer("Извини, в данный момент не могу обработать запрос... Но разработчик сейчас работает над этим. Попробуй позже")

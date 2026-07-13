@@ -41,14 +41,17 @@ class AiRouterConnect:
                 
 
     async def day_allow_request(prompt):
-        data = f"""Проанализируй предложенную строку {prompt} и по параметрам выдай в ответе только ОДНО число без ислючений - примерную норму
-        каллорий для человека для поддержания стройной фигуры"""
+        try:
+            data = f"""Проанализируй предложенную строку {prompt} и по параметрам выдай в ответе только ОДНО число без ислючений - примерную норму
+            каллорий для человека для поддержания стройной фигуры"""
 
-        payload = {
-            "model": MODEL_V,
-            "messages": [
-                {"role": "user", "content": data}
-            ]
-        }
-        
-        return request(payload)
+            payload = {
+                "model": MODEL_V,
+                "messages": [
+                    {"role": "user", "content": data}
+                ]
+            }   
+
+            return request(payload)
+        except Exception as error:
+            print(error)

@@ -2,7 +2,7 @@ from aiogram import Router, types
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 
-from states import OnRegistration
+from .states import OnRegistration
 
 router = Router()
 

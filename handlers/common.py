@@ -2,7 +2,7 @@ from aiogram import Router, types, F
 from aiogram.fsm.context import FSMContext
 import logging
 
-from services.data_process import PlusCallories, IsRegister
+from ..services.data_process import PlusCallories, IsRegister
 
 logger = logging.getLogger(__name__)
 

@@ -4,9 +4,8 @@ from aiogram.fsm.state import StatesGroup, State
 import logging
 
 from ..keyboards.inline import *
-from ..utils.logger import log_message_id
-from utils.logger import delete_log_message
-from services.data_process import GetDayAllow
+from ..utils.logger import log_message_id, delete_log_message
+from ..services.data_process import GetDayAllow
 
 logger = logging.getLogger(__name__)
 

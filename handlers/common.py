@@ -14,7 +14,7 @@ async def prompt_reading(message: types.Message, db, ai):
         tg_id = message.from_user.id
         prompt = message.text
 
-        if await IsRegister():
+        if await IsRegister(tg_id, db):
             answer = await PlusCallories(prompt, tg_id, db, ai)
 
             if answer[0] and answer[1]:

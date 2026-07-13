@@ -34,21 +34,21 @@ async def IsRegister(tg_id, db):
 async def GetDayAllow(prompt, tg_id, db, ai):
     try:
         answer = await ai.day_allow_request(prompt)
-    except Exception as error:
-        logger.info("Error in AI")
-        print(error)
 
-    if answer[0] != None:
-        if answer[0].isdigit():
-            new_allow = int(answer[0])
-            allow = await db.SetNewDailyAllow(tg_id, new_allow)
+        if answer[0] != None:
+            if answer[0].isdigit():
+                new_allow = int(answer[0])
+                allow = await db.SetNewDailyAllow(tg_id, new_allow)
 
-            if allow:
-                return str(allow)
+                if allow:
+                    return str(allow)
+                else:
+                    logger.info(f"Database error.")
             else:
-                logger.info(f"Database error.")
+                logger.info(f"AI give not digit. Trying again.")
+                return GetDayAllow(prompt, tg_id, db, ai)
         else:
-            logger.info(f"AI give not digit. Trying again.")
-            return GetDayAllow(prompt, tg_id, db, ai)
-    else:
-        logger.info(f"Error: {answer[1]}.")
+            logger.info(f"Error: {answer[1]}.")
+
+    except Exception as error:
+        print(error)

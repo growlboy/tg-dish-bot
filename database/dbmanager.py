@@ -1,10 +1,14 @@
+import os
 import aiosql
 import datetime
 
 class DataBaseManager:
     def __init__(self, pool):
         self.pool = pool
-        self.queries = aiosql.from_path("queries.sql", "asyncpg", mandatory_parameters=False)
+
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        queries_path = os.path.join(current_dir, "queries.sql")
+        self.queries = aiosql.from_path(queries_path, "asyncpg", mandatory_parameters=False)
 
     async def __get_daily_allow(self, tg_id):
         try:

@@ -8,7 +8,6 @@ from handlers import handlers_router
 import database.dbmanager as dbmanager
 import ai_service.airouter as airouter
 
-
 async def main():
     logging.basicConfig(
         level=logging.INFO,

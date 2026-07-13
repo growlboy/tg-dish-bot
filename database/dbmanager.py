@@ -1,5 +1,3 @@
-import asyncio
-import asyncpg
 import aiosql
 import datetime
 

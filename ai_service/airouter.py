@@ -1,4 +1,3 @@
-import os
 import aiohttp
 from config import *
 import logging
@@ -51,5 +50,5 @@ class AiRouterConnect:
                 {"role": "user", "content": data}
             ]
         }
-
+        
         return request(payload)

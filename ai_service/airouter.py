@@ -20,8 +20,8 @@ async def request(payload):
                     return text_message, 200
                 else:
                     return None, response.status
-    except:
-        logger.exception()
+    except Exception as error:
+        print(error)
         logger.info("Error in request")
         return None, 400
 

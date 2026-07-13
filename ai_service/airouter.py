@@ -37,7 +37,7 @@ class AiRouterConnect:
             ]
         }
 
-        return request(payload)
+        return await request(payload)
                 
 
     async def day_allow_request(self, prompt):
@@ -52,6 +52,6 @@ class AiRouterConnect:
                 ]
             }   
 
-            return request(payload)
+            return await request(payload)
         except Exception as error:
             print(error)

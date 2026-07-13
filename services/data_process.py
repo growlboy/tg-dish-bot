@@ -34,9 +34,9 @@ async def IsRegister(tg_id, db):
 async def GetDayAllow(prompt, tg_id, db, ai):
     try:
         answer = await ai.day_allow_request(prompt)
-    except:
+    except Exception as error:
         logger.info("Error in AI")
-        logger.exception()
+        print(error)
 
     if answer[0] != None:
         if answer[0].isdigit():

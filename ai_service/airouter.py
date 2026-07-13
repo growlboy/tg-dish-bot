@@ -1,6 +1,6 @@
 import os
 import aiohttp
-from ..config import *
+from config import *
 
 async def request(payload):
     headers = {

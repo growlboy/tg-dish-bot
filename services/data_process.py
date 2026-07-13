@@ -46,7 +46,7 @@ async def GetDayAllow(prompt, tg_id, db, ai):
                     logger.info(f"Database error.")
             else:
                 logger.info(f"AI give not digit. Trying again.")
-                return GetDayAllow(prompt, tg_id, db, ai)
+                return await GetDayAllow(prompt, tg_id, db, ai)
         else:
             logger.info(f"Error: {answer[1]}.")
 

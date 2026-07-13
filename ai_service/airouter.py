@@ -1,6 +1,9 @@
 import os
 import aiohttp
 from config import *
+import logging
+
+logger = logging.getLogger(__name__)
 
 async def request(payload):
     headers = {
@@ -19,6 +22,8 @@ async def request(payload):
                 else:
                     return None, response.status
     except:
+        logger.exception()
+        logger.info("Error in request")
         return None, 400
 
 class AiRouterConnect:

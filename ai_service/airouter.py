@@ -46,7 +46,7 @@ class AiRouterConnect:
         каллорий для человека для поддержания стройной фигуры"""
 
         payload = {
-            "model": os.getenv("MODEL"),
+            "model": MODEL_V,
             "messages": [
                 {"role": "user", "content": data}
             ]

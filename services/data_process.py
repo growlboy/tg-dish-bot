@@ -56,7 +56,7 @@ async def GetDayAllow(tg_id, db):
         today = await db.GetDailyAllow(tg_id)
 
         if today:
-            return str(today)
+            return today
         else:
             logger.info(f"Database error.")
     
@@ -66,9 +66,10 @@ async def GetDayAllow(tg_id, db):
 async def GetTodayCal(tg_id, db):
     try:
         today = await db.GetTodayCal(tg_id)
+        print(today)
 
-        if today:
-            return str(today)
+        if today or today == 0:
+            return today
         else:
             logger.info(f"Database error.")
     

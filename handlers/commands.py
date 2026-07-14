@@ -13,10 +13,10 @@ async def cmd_todaycheck(message: types.Message, db):
     answer = await GetTodayCal(tg_id, db)
     allow = await GetDayAllow(tg_id, db)
 
-    if answer and allow:
+    if allow:
         result_string = "Суточная норма не превышена. Ешь на здоровье!✅"
 
-        if allow > answer:
+        if allow < answer:
             result_string = "Немного превышена суточная норма 🤔"
 
         text = (

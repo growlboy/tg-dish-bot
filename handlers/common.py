@@ -26,7 +26,7 @@ async def prompt_reading(message: types.Message, db, ai):
                 result_string = "Немного превышена суточная норма 🤔"
 
             text = (
-            f"<b> Это вышло на {answer[0]} каллорий.🥕 \n\n"
+            f"Это вышло на {answer[0]} каллорий.🥕 \n\n"
             f"Всего на сегодня: {answer[1]} / {today_allow} каллорий \n\n"
             f"{result_string}"
             )

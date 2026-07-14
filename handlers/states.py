@@ -3,6 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.enums import ParseMode
 import logging
+from aiogram.utils.chat_action import ChatActionSender
 
 from display.inline import *
 from utils.logger import log_message_id, delete_log_message
@@ -32,7 +33,7 @@ async def registr_waiting(message: types.Message, state: FSMContext, db):
 
     await state.clear()
     await state.set_state(OnSetDailyAllow.gender_waiting)
-    
+
     await log_message_id(state, message.message_id)
     await message.answer(f"Приятно познакомиться, {user_name}! Ответь на пару легких вопросов")
     await log_message_id(state, message.message_id)
@@ -113,16 +114,19 @@ async def allow_waiting(message: types.Message, state: FSMContext, db, bot, ai):
     await delete_log_message(state, message, bot, user_data)
 
     try:
-        allow = await SetDayAllow(all_data_prompt, id, db, ai)
+        async with ChatActionSender.typing(chat_id=message.chat.id, bot=bot):
+            allow = await SetDayAllow(all_data_prompt, id, db, ai)
 
-        await state.clear()
+            await state.clear()
 
-        text = (
-            f"<b> Отлично! Твоя дневная норма: {allow} каллорий🥕 \n\n"
+            text = (
+            f"Отлично! Твоя дневная норма: {allow} каллорий🥕 \n\n"
             "Начнем считать твой рацион. Напиши что ты съел(а) за сегодня."
-        )
+            )
 
-        await message.answer(text=text, parse_mode=ParseMode.HTML)
-    except:
+            await message.answer(text=text, parse_mode=ParseMode.HTML)
+
+    except Exception as error:
+        print(error)
         logger.info("Get error in buisness request")
         await default_error(message)

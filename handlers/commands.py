@@ -11,7 +11,7 @@ router = Router()
 async def cmd_todaycheck(message: types.Message, db):
     tg_id = message.from_user.id
     answer = await GetTodayCal(tg_id, db)
-    allow = await GetDayAllow(tg_id)
+    allow = await GetDayAllow(tg_id, db)
 
     result_string = "Суточная норма не превышена. Ешь на здоровье!✅"
 
@@ -31,7 +31,7 @@ async def cmd_todaycheck(message: types.Message, db):
 @router.message(Command("ac"))
 async def cmd_todaycheck(message: types.Message, db):
     tg_id = message.from_user.id
-    answer = await GetDayAllow(tg_id)
+    answer = await GetDayAllow(tg_id, db)
 
     if answer:
         await message.answer(f"""Ваша суточная норма: {answer} каллорий 🥕""")

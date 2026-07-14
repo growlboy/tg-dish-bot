@@ -1,8 +1,10 @@
 from aiogram import Router, types, F
 from aiogram.fsm.context import FSMContext
 import logging
+from aiogram.enums import ParseMode
 
-from services.data_process import PlusCallories, IsRegister
+from services.data_process import PlusCallories, IsRegister, GetDayAllow
+from display.error_messages import default_error
 
 logger = logging.getLogger(__name__)
 
@@ -16,10 +18,23 @@ async def prompt_reading(message: types.Message, db, ai):
 
         if await IsRegister(tg_id, db):
             answer = await PlusCallories(prompt, tg_id, db, ai)
+            today_allow = await GetDayAllow(tg_id, db)
+            
+            result_string = "Суточная норма не превышена. Ешь на здоровье!✅"
 
-            if answer[0] and answer[1]:
-                await message.answer(f"""Это вышло на {answer[0]} каллорий.
-                Всего на сегодня: {answer[1]} каллорий ✅""")
+            if today_allow > answer[1]:
+                result_string = "Немного превышена суточная норма 🤔"
+
+            text = (
+            f"<b> Это вышло на {answer[0]} каллорий.🥕 \n\n"
+            f"Всего на сегодня: {answer[1]} / {today_allow} каллорий \n\n"
+            f"{result_string}"
+            )
+
+            if answer[0] and answer[1] and today_allow:
+                await message.answer(text=text, parse_mode=ParseMode.HTML)
+            else:
+                default_error(message)
         
         else:
             await message.answer("Вы еще не зарегистрированы...")
@@ -27,4 +42,4 @@ async def prompt_reading(message: types.Message, db, ai):
     except Exception as error:
         print(error)
         logger.info("Get error in buisness request")
-        await message.answer("Извини, в данный момент не могу обработать запрос... Но разработчик сейчас работает над этим. Попробуй позже")
+        default_error(message)

@@ -1,12 +1,43 @@
 from aiogram import Router, types
 from aiogram.filters import Command
+from aiogram.enums import ParseMode
+
+from services.data_process import GetTodayCal, GetDayAllow
+from display.error_messages import default_error
 
 router = Router()
 
-@router.message(Command("todaycheck"))
+@router.message(Command("tc"))
 async def cmd_todaycheck(message: types.Message, db):
     tg_id = message.from_user.id
-    answer = await db.GetTodayCal(tg_id)
+    answer = await GetTodayCal(tg_id, db)
+    allow = await GetDayAllow(tg_id)
+
+    result_string = "Суточная норма не превышена. Ешь на здоровье!✅"
+
+    if allow > answer:
+        result_string = "Немного превышена суточная норма 🤔"
+
+    text = (
+    f"Всего на сегодня: {answer} / {allow} каллорий\n\n"
+    f"{result_string}"
+    )
+
+    if answer and allow:
+        await message.answer(text=text, parse_mode=ParseMode.HTML)
+    else:
+        default_error(message)
+
+@router.message(Command("ac"))
+async def cmd_todaycheck(message: types.Message, db):
+    tg_id = message.from_user.id
+    answer = await GetDayAllow(tg_id)
 
     if answer:
-        await message.answer(f"""Всего на сегодня: {str(answer)} каллорий ✅""")
+        await message.answer(f"""Ваша суточная норма: {answer} каллорий 🥕""")
+    else:
+        default_error(message)
+
+@router.message(Command("history"))
+async def cmd_todaycheck(message: types.Message, db):
+    await message.answer("Пока не сделал😦")

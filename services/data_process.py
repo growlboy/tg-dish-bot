@@ -30,7 +30,7 @@ async def IsRegister(tg_id, db):
         logger.info(f"Database error.")
 
 
-async def GetDayAllow(prompt, tg_id, db, ai):
+async def SetDayAllow(prompt, tg_id, db, ai):
     try:
         answer = await ai.day_allow_request(prompt)
 
@@ -48,5 +48,29 @@ async def GetDayAllow(prompt, tg_id, db, ai):
         else:
             logger.info(f"Error: {answer[1]}.")
 
+    except Exception as error:
+        print(error)
+
+async def GetDayAllow(tg_id, db):
+    try:
+        today = await db.GetDailyAllow(tg_id)
+
+        if today:
+            return str(today)
+        else:
+            logger.info(f"Database error.")
+    
+    except Exception as error:
+        print(error)
+
+async def GetTodayCal(tg_id, db):
+    try:
+        today = await db.GetTodayCal(tg_id)
+
+        if today:
+            return str(today)
+        else:
+            logger.info(f"Database error.")
+    
     except Exception as error:
         print(error)

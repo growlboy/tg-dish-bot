@@ -1,11 +1,13 @@
 from aiogram import types, F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
+from aiogram.enums import ParseMode
 import logging
 
-from keyboards.inline import *
+from display.inline import *
 from utils.logger import log_message_id, delete_log_message
-from services.data_process import GetDayAllow
+from services.data_process import SetDayAllow
+from display.error_messages import default_error
 
 logger = logging.getLogger(__name__)
 
@@ -30,6 +32,7 @@ async def registr_waiting(message: types.Message, state: FSMContext, db):
     await state.set_state(OnSetDailyAllow.gender_waiting)
     await message.answer(f"Приятно познакомиться, {user_name}! Ответь на пару легких вопросов")
     await log_message_id(state, message.message_id)
+
     await message.answer(
         "Укажите ваш пол.",
         reply_markup=get_inline_gender_answer()
@@ -103,11 +106,16 @@ async def allow_waiting(message: types.Message, state: FSMContext, db, bot, ai):
     await delete_log_message(state, message, bot, user_data)
 
     try:
-        allow = await GetDayAllow(all_data_prompt, id, db, ai)
+        allow = await SetDayAllow(all_data_prompt, id, db, ai)
 
         await state.clear()
-        await message.answer(f"""Отлично! Твоя дневная норма: {allow} каллорий🥕
-        Начнем считать твой рацион. Напиши что ты съел(а) за сегодня.""")
+
+        text = (
+            f"<b> Отлично! Твоя дневная норма: {allow} каллорий🥕 \n\n"
+            "Начнем считать твой рацион. Напиши что ты съел(а) за сегодня."
+        )
+
+        await message.answer(text=text, parse_mode=ParseMode.HTML)
     except:
         logger.info("Get error in buisness request")
-        await message.answer("Извини, в данный момент не могу обработать запрос... Но разработчик сейчас работает над этим. Попробуй позже")
+        default_error(message)

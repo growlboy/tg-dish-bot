@@ -22,7 +22,7 @@ async def prompt_reading(message: types.Message, db, ai):
             
             result_string = "Суточная норма не превышена. Ешь на здоровье!✅"
 
-            if today_allow > answer[1]:
+            if int(today_allow) > int(answer[1]):
                 result_string = "Немного превышена суточная норма 🤔"
 
             text = (

@@ -22,6 +22,7 @@ class DataBaseManager:
         try:
             async with self.pool.acquire() as conn:
                 today_cal = await self.queries.get_today_cal(conn, tg_id=tg_id)
+                print(today_cal)
                 return today_cal
         except Exception as error:
             return "Error with getting"

@@ -34,7 +34,7 @@ async def prompt_reading(message: types.Message, db, ai):
             if answer[0] and answer[1] and today_allow:
                 await message.answer(text=text, parse_mode=ParseMode.HTML)
             else:
-                default_error(message)
+                await default_error(message)
         
         else:
             await message.answer("Вы еще не зарегистрированы...")
@@ -42,4 +42,4 @@ async def prompt_reading(message: types.Message, db, ai):
     except Exception as error:
         print(error)
         logger.info("Get error in buisness request")
-        default_error(message)
+        await default_error(message)

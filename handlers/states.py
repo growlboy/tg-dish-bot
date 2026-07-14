@@ -23,6 +23,8 @@ class OnSetDailyAllow(StatesGroup):
 
 @router.message(OnRegistration.name_waiting, F.text)
 async def registr_waiting(message: types.Message, state: FSMContext, db):
+    await log_message_id(state, message.message_id)
+
     user_name = message.text
     tg_id = message.from_user.id
     
@@ -30,6 +32,8 @@ async def registr_waiting(message: types.Message, state: FSMContext, db):
 
     await state.clear()
     await state.set_state(OnSetDailyAllow.gender_waiting)
+    
+    await log_message_id(state, message.message_id)
     await message.answer(f"Приятно познакомиться, {user_name}! Ответь на пару легких вопросов")
     await log_message_id(state, message.message_id)
 
@@ -41,7 +45,9 @@ async def registr_waiting(message: types.Message, state: FSMContext, db):
 
 @router.callback_query(lambda c: c.data == "btn_man")
 async def process_callback_man(callback_query: types.CallbackQuery, state: FSMContext):
+    await log_message_id(state, callback_query.message.message_id)
     await callback_query.answer()
+    await log_message_id(state, callback_query.message.message_id)
     
     await state.update_data(user_gender="Man")
     
@@ -54,6 +60,7 @@ async def process_callback_man(callback_query: types.CallbackQuery, state: FSMCo
 
 @router.callback_query(lambda c: c.data == "btn_girl")
 async def process_callback_man(callback_query: types.CallbackQuery, state: FSMContext):
+    await log_message_id(state, callback_query.message.message_id)
     await callback_query.answer()
     
     await state.update_data(user_gender="Girl")
@@ -118,4 +125,4 @@ async def allow_waiting(message: types.Message, state: FSMContext, db, bot, ai):
         await message.answer(text=text, parse_mode=ParseMode.HTML)
     except:
         logger.info("Get error in buisness request")
-        default_error(message)
+        await default_error(message)

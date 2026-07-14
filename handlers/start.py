@@ -2,6 +2,7 @@ from aiogram import Router, types
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 
+from utils.logger import log_message_id, delete_log_message
 from .states import OnRegistration
 
 router = Router()
@@ -10,6 +11,8 @@ router = Router()
 async def start_handler(message: types.Message, state: FSMContext, db):
     try:
         await state.clear()
+
+        await log_message_id(state, message.message_id)
 
         username = message.from_user.username
         tg_id = message.from_user.id
@@ -20,6 +23,7 @@ async def start_handler(message: types.Message, state: FSMContext, db):
         if await db.IsHaveRealname(tg_id) == False:
             await state.set_state(OnRegistration.name_waiting)
             await message.answer(f"Привет, {username}. Мне нравится это имя, но скажи, как я могу тебя называть по-настоящему?")
+            await log_message_id(state, message.message_id)
         else:
             await message.answer(f"Снова привет. Ты меня перезапустил(а) и я готов считать твой рацион!")
 

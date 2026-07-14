@@ -26,7 +26,7 @@ async def cmd_todaycheck(message: types.Message, db):
     if answer and allow:
         await message.answer(text=text, parse_mode=ParseMode.HTML)
     else:
-        default_error(message)
+        await default_error(message)
 
 @router.message(Command("ac"))
 async def cmd_todaycheck(message: types.Message, db):
@@ -36,7 +36,7 @@ async def cmd_todaycheck(message: types.Message, db):
     if answer:
         await message.answer(f"""Ваша суточная норма: {answer} каллорий 🥕""")
     else:
-        default_error(message)
+        await default_error(message)
 
 @router.message(Command("history"))
 async def cmd_todaycheck(message: types.Message, db):

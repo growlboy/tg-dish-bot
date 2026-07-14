@@ -104,7 +104,10 @@ class DataBaseManager:
         return await self.__get_today_cal(tg_id)
     
     async def GetTodayCal(self, tg_id):
-        return await self.__get_today_cal(tg_id)
+        try:
+            return await self.__get_today_cal(tg_id)
+        except Exception as error:
+            print(error)
     
     async def SetNewDailyAllow(self, tg_id, daily_allow):
         await self.__set_daily_allow(tg_id, daily_allow)
